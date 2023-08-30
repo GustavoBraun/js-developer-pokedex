@@ -30,5 +30,17 @@ pokeApi.getPokemons = (offset = 0, limite = 9) => {
         .then((jsonbody) => jsonbody.results)
         .then((pokemons) => pokemons.map(pokeApi.getPokemonDetail))
         .then((detailRequests) => Promise.all(detailRequests))      
+}
+
+pokeApi.getOnePokemon = (id) => {
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`
+
+    return fetch(url)
+        .then((response) => response.json())
     }
 
+pokeApi.getPokemonSpecie = (pokemon) => {
+    return fetch(pokemon.species.url)
+        .then((response) => response.json())
+        .then((jsonbody) => jsonbody.genera[7].genus)
+}
