@@ -1,5 +1,5 @@
 
-const pokemonList = document.getElementById('pokemonList')
+const pokemonList = document.querySelector('.pokemons')
 const loadMoreBtn = document.querySelector("#loadMoreBtn")
 const pokedex = document.querySelector(".pokedex")
 const maxRecords = 151
@@ -57,11 +57,10 @@ function getDetails(pokemon_id) {
     <section class="pokemonDetails">
         <img src="${pokemon.sprites.other["official-artwork"].front_default}" alt="${pokemon.name} sprite">
         <article>
-            <ul>
-                <li onclick="loadAbout(${pokemon.id})"><h2>About</h2></li>
-                <li><h2>Base Stats</h2></li>
-                <li><h2>Evolution</h2></li>
-                <li><h2>Moves</h2></li>
+            <ul class="pokemonDetailsMenu">
+                <li onclick="loadAbout(${pokemon.id})">About</li>
+                <li onclick="loadBaseStats(${pokemon.id})">Base Stats</li>
+                <li onclick="loadMoves(${pokemon.id})">Moves</li>
             </ul>        
             <article id="pokedexContent">    
                 <ul>
@@ -98,13 +97,42 @@ function loadSpecie(pokemon) {
 }
 
 function loadBaseStats(pokemonId) {
-    // todo
+    const pokedexContent = document.getElementById('pokedexContent')
+    pokeApi.getOnePokemon(pokemonId).then((pokemon) => {
+        pokedexContent.innerHTML = `
+        <ul class="stats">
+            ${pokemon.stats.map((stats) => `<li><div><div style="display: inline-block; width: 20%"><p>${stats.stat.name}</p></div><p style="display:inline; padding:0px 30px;">${stats.base_stat}</p><div style="display:inline-block; background-color:#ccc; height: .5rem; width:10rem; border-radius: .5rem">
+                <div style="width: ${stats.base_stat}%; height: 100%; border-radius: .5rem; background-color: ${loadColorToStatBar(stats.base_stat)};"></div>
+            </div></div></li>
+            `
+            ).join('')}
+        </ul>
+        `
+    })
 }
 
-function loadEvolution(pokemonId) {
-    // todo
+function loadColorToStatBar(number) {
+    if (number < 50) {
+        return "#f91717d9";
+    } else {
+        return "#4bc07ad9";
+    }
 }
 
 function loadMoves(pokemonId) {
-    // todo
+    const pokedexContent = document.getElementById('pokedexContent')
+    pokeApi.getOnePokemon(pokemonId).then((pokemon) => {
+        pokedexContent.innerHTML = `
+            <ol class="moveList">
+                ${pokemon.moves.map((moves) => {
+                    const moveList = document.querySelector('.moveList')
+                    pokeApi.getPokemonMoveDetails(moves.move.url).then((move) => {
+                        moveList.appendChild(`
+                        <li class="move ${move.type.name}">${move.name}</li>
+                        `)
+                    })
+                }).join('')}
+            </ol>
+        `
+    })
 }

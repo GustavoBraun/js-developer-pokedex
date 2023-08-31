@@ -33,9 +33,7 @@ pokeApi.getPokemons = (offset = 0, limite = 9) => {
 }
 
 pokeApi.getOnePokemon = (id) => {
-    const url = `https://pokeapi.co/api/v2/pokemon/${id}`
-
-    return fetch(url)
+    return fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
         .then((response) => response.json())
     }
 
@@ -43,4 +41,10 @@ pokeApi.getPokemonSpecie = (pokemon) => {
     return fetch(pokemon.species.url)
         .then((response) => response.json())
         .then((jsonbody) => jsonbody.genera[7].genus)
+}
+
+pokeApi.getPokemonMoveDetails = (url) => {
+    return fetch(url)
+        .then((response) => response.json())
+
 }

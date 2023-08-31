@@ -154,6 +154,41 @@
     margin: .25rem 0;
 }
 
+.pokedex {
+    font-size: 20px ;
+}
+
+.pokemonDetailsMenu {
+    list-style: none;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.pokemonDetailsMenu li {
+    display: inline-block;
+    padding: 1rem;
+}
+
+.moveList {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+}
+
+.moveList li {
+    display: flex;
+    flex-direction: column;
+    margin: .5rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 1px black solid;
+    width: 90%;
+    align-items: center;
+}
+
 @media screen and (min-width: 380px) {
     .pokemons {
         grid-template-columns: 1fr 1fr;
