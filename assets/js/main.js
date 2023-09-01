@@ -2,6 +2,7 @@
 const pokemonList = document.querySelector('.pokemons')
 const loadMoreBtn = document.querySelector("#loadMoreBtn")
 const pokedex = document.querySelector(".pokedex")
+const pokemonDetails = document.querySelector(".pokemonDetails")
 const maxRecords = 151
 const limite = 9
 let offset = 0
@@ -28,7 +29,6 @@ loadPokemonItens(offset, limite)
 
 loadMoreBtn.addEventListener('click', () => {
     offset += limite
-    debugger
     const qtdRecordNexPag = offset + limite
 
     if (qtdRecordNexPag >= maxRecords) {
@@ -44,47 +44,68 @@ loadMoreBtn.addEventListener('click', () => {
 
 function getDetails(pokemon_id) {
     pokeApi.getOnePokemon(pokemon_id).then((pokemon) => {
-        pokedex.innerHTML = `<header>
-        <nav>
-            <a href="index.html" class="button" >Back</a>
-        </nav>
-        <h1>${pokemon.name}</h1>
-        <ol class="types">
-                ${pokemon.types.map((type) => `<li class="type ${type.type.name}">${type.type.name}</li>`).join('')}
-        </ol>
-    </header>
+        pokedex.classList.add(`${pokemon.types[0].type.name}`)
+        pokedex.classList.add("newPokedex")
+        pokedex.classList.remove("pokedex")
+        pokedex.innerHTML = `
+            <header class="pokemonDetailsHeader ${pokemon.types[0].type.name}">
+                <nav>
+                    <a href="index.html" class="buttonPokemonDetail" ><span>&#8592;</span></a>
+                </nav>
+                <h1 class="pokemonDetailsName">${pokemon.name}</h1>
+                <span class="numberPokemonDetails">#${pokemon.id}</span>
+                <ol class="typesPokemonDetail">
+                        ${pokemon.types.map((type) => `<li class="typePokemonDetail ${type.type.name}">${type.type.name}</li>`).join('')}
+                </ol>
+                <img src="${pokemon.sprites.other["official-artwork"].front_default}" alt="${pokemon.name} sprite">
+            </header>
 
-    <section class="pokemonDetails">
-        <img src="${pokemon.sprites.other["official-artwork"].front_default}" alt="${pokemon.name} sprite">
+   
+        `
+        pokemonDetails.innerHTML = `
         <article>
             <ul class="pokemonDetailsMenu">
-                <li onclick="loadAbout(${pokemon.id})">About</li>
-                <li onclick="loadBaseStats(${pokemon.id})">Base Stats</li>
-                <li onclick="loadMoves(${pokemon.id})">Moves</li>
+                <li onclick="loadAbout(${pokemon.id})" class="aboutMenuTitle menuChosen">About</li>
+                <li onclick="loadBaseStats(${pokemon.id})" class="baseStatsMenuTitle">Base Stats</li>
+                <li onclick="loadMoves(${pokemon.id})" class="movesMenuTitle">Moves</li>
             </ul>        
             <article id="pokedexContent">    
-                <ul>
+                <ul class="menus">
                     <li class="specie">${loadSpecie(pokemon)}</li>
                     <li>Height: ${pokemon.height}0cm</li>
                     <li>Weight: ${pokemon.weight}0g</li>
-                    <li>Abilities: ${pokemon.abilities.map((ability) => `${ability.ability.name}`).join(',')}</li>
+                    <li>Abilities: ${pokemon.abilities.map((ability) => `${ability.ability.name}`).join(', ')}</li>
                 </ul>   
             </article>
-        </article>
-    </section>`
+        </article>`
     })
 
 }
 
+function loadChosen(menuChosen, notMenuChosenOne, notMenuChosenTwo) {
+    const constMenuChosen = document.querySelector(`.${menuChosen}`)
+    const constNotMenuChosenOne = document.querySelector(`.${notMenuChosenOne}`)
+    const constNotMenuChosenTwo = document.querySelector(`.${notMenuChosenTwo}`) 
+    if (constNotMenuChosenOne.classList.contains("menuChosen")){
+        constNotMenuChosenOne.classList.remove("menuChosen")
+    }
+    if (constNotMenuChosenTwo.classList.contains("menuChosen")) {
+        constNotMenuChosenTwo.classList.remove("menuChosen")    
+    }
+    
+    constMenuChosen.classList.add("menuChosen")
+}
+
 function loadAbout(pokemonId) {
+    loadChosen("aboutMenuTitle", "baseStatsMenuTitle", "movesMenuTitle");
     const pokedexContent = document.getElementById('pokedexContent')
     pokeApi.getOnePokemon(pokemonId).then((pokemon) => {
         pokedexContent.innerHTML = `
-        <ul>
+        <ul class="menus">
             <li class="specie">${loadSpecie(pokemon)}</li>
             <li>Height: ${pokemon.height}0cm</li>
             <li>Weight: ${pokemon.weight}0g</li>
-            <li>Abilities: ${pokemon.abilities.map((ability) => `${ability.ability.name}`).join(',')}</li>
+            <li>Abilities: ${pokemon.abilities.map((ability) => `${ability.ability.name}`).join(',  ')}</li>
         </ul>`
     })
 }
@@ -97,10 +118,11 @@ function loadSpecie(pokemon) {
 }
 
 function loadBaseStats(pokemonId) {
+    loadChosen("baseStatsMenuTitle", "aboutMenuTitle", "movesMenuTitle");
     const pokedexContent = document.getElementById('pokedexContent')
     pokeApi.getOnePokemon(pokemonId).then((pokemon) => {
         pokedexContent.innerHTML = `
-        <ul class="stats">
+        <ul class="menus">
             ${pokemon.stats.map((stats) => `<li><div><div style="display: inline-block; width: 20%"><p>${stats.stat.name}</p></div><p style="display:inline; padding:0px 30px;">${stats.base_stat}</p><div style="display:inline-block; background-color:#ccc; height: .5rem; width:10rem; border-radius: .5rem">
                 <div style="width: ${stats.base_stat}%; height: 100%; border-radius: .5rem; background-color: ${loadColorToStatBar(stats.base_stat)};"></div>
             </div></div></li>
@@ -120,19 +142,22 @@ function loadColorToStatBar(number) {
 }
 
 function loadMoves(pokemonId) {
+    loadChosen("movesMenuTitle", "aboutMenuTitle", "baseStatsMenuTitle");
     const pokedexContent = document.getElementById('pokedexContent')
+    pokedexContent.innerHTML = `
+        <ol class="moveList">
+            
+        </ol>
+    `
     pokeApi.getOnePokemon(pokemonId).then((pokemon) => {
-        pokedexContent.innerHTML = `
-            <ol class="moveList">
-                ${pokemon.moves.map((moves) => {
-                    const moveList = document.querySelector('.moveList')
+
+        const moveList = document.querySelector('.moveList')
+        pokemon.moves.map((moves) => {
                     pokeApi.getPokemonMoveDetails(moves.move.url).then((move) => {
-                        moveList.appendChild(`
+                        moveList.innerHTML += `
                         <li class="move ${move.type.name}">${move.name}</li>
-                        `)
+                        `
                     })
-                }).join('')}
-            </ol>
-        `
+                }).join('')
     })
 }

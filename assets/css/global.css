@@ -4,7 +4,8 @@
 }
 
 body {
-    background-color: #f6f8fc;
+    background-color: white;
+    max-width: 100%;
 }
 
 .pokedex {
@@ -12,10 +13,29 @@ body {
     height: 100vh;
     padding: 1rem;
     background-color: #fff;
+    font-size: 20px;
+}
+
+.newPokedex {
+    width: 100vw;
+    height: 40vh !important;
+    padding: 1rem;
+    background-color: #fff;
+    font-size: 20px;
+
+}
+
+.pokemonDetails {
+    height: 30vh;
+    width: 100vw;
+    background-color: #fff;
+    padding: 1rem;
+    text-transform: capitalize;
+
 }
 
 @media screen and (min-width: 992px) {
-    .pokedex {
+    .pokedex .newPokedex {
         max-width: 992px;
         height: auto;
         margin: 1rem auto;
