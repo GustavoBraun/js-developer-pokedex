@@ -84,6 +84,7 @@
     margin: .5rem;
     padding: 1rem;
     border-radius: 1rem;
+    cursor: pointer;
 }
 
 .pokemonDetailsLink {
@@ -212,13 +213,16 @@
     text-align: center;
 }
 
-.menuChosen {
-    text-decoration:underline;
-}
+
 
 .pokemonDetailsMenu li {
     display: inline-block;
     padding: 1rem;
+    cursor: pointer;
+}
+
+.menuChosen {
+    text-decoration:underline;
 }
 
 .menus {
@@ -229,10 +233,6 @@
 
 .menus li {
     margin: 1rem;
-}
-
-.stats {
-
 }
 
 .moveList {
