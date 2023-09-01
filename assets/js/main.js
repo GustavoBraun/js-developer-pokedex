@@ -48,7 +48,7 @@ function getDetails(pokemon_id) {
         pokedex.classList.add("newPokedex")
         pokedex.classList.remove("pokedex")
         pokedex.innerHTML = `
-            <header class="pokemonDetailsHeader ${pokemon.types[0].type.name}">
+            <header class="pokemonDetailsHeader ">
                 <nav>
                     <a href="index.html" class="buttonPokemonDetail" ><span>&#8592;</span></a>
                 </nav>

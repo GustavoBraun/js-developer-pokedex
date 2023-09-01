@@ -20,7 +20,6 @@ body {
     width: 100vw;
     height: 40vh !important;
     padding: 1rem;
-    background-color: #fff;
     font-size: 20px;
 
 }
@@ -35,10 +34,15 @@ body {
 }
 
 @media screen and (min-width: 992px) {
-    .pokedex .newPokedex {
+    .pokedex  {
         max-width: 992px;
         height: auto;
         margin: 1rem auto;
         border-radius: 1rem;
+    }
+    .newPokedex {
+        height: auto;
+        margin: 1rem auto;
+        border-radius: 1rem;        
     }
 }
